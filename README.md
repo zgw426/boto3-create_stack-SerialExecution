@@ -140,7 +140,24 @@ b7a1f
         PJPrefix = Project1
 [CloudFormation] Outputs
         SecurityGroupEC2 : sg-00000000000000000 : sg-Project1-EC2-001
+[LOG] CFn Stack [test001-ec2] start.
+[LOG] CFn Stack [test001-ec2] end.
+スタック名 : test001-ec2
+スタックID : arn:aws:cloudformation:ap-northeast-1:121212121212:stack/test001-ec2/00000000-0000-0000-0000-000000000000
+パラメータ
+        KeyPairName = keypair_ap-northeast-1_01
+        NetworkName = Net001
+        EC2InstanceName = ec2-001
+        SGNo = 001
+        EC2InstanceVolumeSize = 8
+        ServiceName = ServiceA
+        EC2InstanceAMI = /aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2
+        InstanceProfile = tra-ec2-001-profile
+        PJPrefix = Project1
+        EC2InstanceInstanceType = t2.micro
+        EC2InstanceVolumeType = gp2
+[CloudFormation] Outputs
+        EC2InstancePrivateIp : 10.11.1.45 : Project1-ec2-001-private-ip
+        EC2InstanceID : i-00000000000000000 : Project1-ec2-001-id
 PS C:\Users\usr001\tmp>
 ```
-
-
