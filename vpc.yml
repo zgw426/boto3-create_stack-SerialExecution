@@ -1,0 +1,47 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description:  VPC
+
+Parameters:
+  PJPrefix: { Type: String, Default: "172-020" }
+  VPCCIDR:  { Type: String, Default: "172.20.0.0/16"}
+
+Resources: 
+  VPC: 
+    Type: "AWS::EC2::VPC"
+    Properties: 
+      CidrBlock: !Ref VPCCIDR
+      EnableDnsSupport: "true"
+      EnableDnsHostnames: "true"
+      InstanceTenancy: default
+      Tags: 
+        - Key: Name
+          Value: !Sub "${PJPrefix}-vpc"
+
+  InternetGateway: 
+    Type: "AWS::EC2::InternetGateway"
+    Properties: 
+      Tags: 
+        - Key: Name
+          Value: !Sub "${PJPrefix}-igw"
+
+  InternetGatewayAttachment: 
+    Type: "AWS::EC2::VPCGatewayAttachment"
+    Properties: 
+      InternetGatewayId: !Ref InternetGateway
+      VpcId: !Ref VPC 
+
+Outputs:
+  VPC:
+    Value: !Ref VPC
+    Export:
+      Name: !Sub "${PJPrefix}-vpc"
+
+  InternetGateway:
+    Value: !Ref InternetGateway
+    Export:
+      Name: !Sub "${PJPrefix}-igw"
+
+  VPCCIDR:
+    Value: !Ref VPCCIDR
+    Export:
+      Name: !Sub "${PJPrefix}-vpc-cidr"

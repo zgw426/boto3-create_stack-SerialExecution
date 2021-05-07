@@ -1,0 +1,53 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: EC2 linux
+
+Parameters:
+  PJPrefix:        { Type: String, Default: "edi" }
+  ServiceName:     { Type: String, Default: "EDI" }
+  NetworkName:     { Type: String, Default: "NetworkName" }
+  KeyPairName:     { Type: AWS::EC2::KeyPair::KeyName, Default: "" }
+  EC2InstanceName: { Type: String, Default: "ec2-001" }
+  EC2InstanceAMI:  { Type: AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>, Default: "/aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2" }
+  EC2InstanceInstanceType: { Type: String, Default: "t2.micro" }
+  EC2InstanceVolumeType:   { Type: String, Default: "gp2" }
+  EC2InstanceVolumeSize:   { Type: String, Default: "8" }
+  InstanceProfile:         { Type: String, Default: "tra-ec2-001-profile" }
+  SGNo:                    { Type: String, Default: "001" }
+
+Resources:
+  EC2Instance:
+    Type: "AWS::EC2::Instance"
+    Properties:
+      Tags:
+        - Key: Name
+          Value: !Sub "${PJPrefix}-${EC2InstanceName}"
+        - Key: ServiceName
+          Value: !Sub "${ServiceName}"
+      ImageId: !Ref EC2InstanceAMI
+      InstanceType: !Ref EC2InstanceInstanceType
+      KeyName: !Ref KeyPairName
+      DisableApiTermination: false
+      EbsOptimized: false
+      BlockDeviceMappings:
+        - DeviceName: /dev/xvda
+          Ebs:
+            DeleteOnTermination: true
+            VolumeType: !Ref EC2InstanceVolumeType
+            VolumeSize: !Ref EC2InstanceVolumeSize
+      SecurityGroupIds: 
+        - { "Fn::ImportValue": !Sub "sg-${PJPrefix}-${SGNo}" }
+      SubnetId: {"Fn::ImportValue": !Sub "${PJPrefix}-${NetworkName}"}
+      UserData: !Base64 | 
+        #! /bin/bash
+        yum update -y
+
+Outputs:
+  EC2InstanceID:
+    Value: !Ref EC2Instance
+    Export:
+      Name: !Sub "${PJPrefix}-${EC2InstanceName}-id"
+
+  EC2InstancePrivateIp:
+    Value: !GetAtt EC2Instance.PrivateIp
+    Export:
+      Name: !Sub "${PJPrefix}-${EC2InstanceName}-private-ip"

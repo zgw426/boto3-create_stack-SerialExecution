@@ -1,0 +1,15 @@
+[
+    {"StackName": "test001-vpc","Code": "vpc.yml", "PJPrefix": "Project1","VPCCIDR": "10.11.0.0/16"},
+    {"StackName": "test001-subnet1","Code": "subnet-public.yml", "PJPrefix": "Project1","NetworkName": "Net001","PublicSubnetCIDR": "10.11.1.0/24", "AZName": "ap-northeast-1a"},
+    {"StackName": "test001-sg","Code": "sg.yml", "PJPrefix": "Project1","ServiceName": "ServiceA","SGNo": "001"},
+    {"StackName": "test001-ec2","Code": "ec2-linux.yml", "PJPrefix": "Project1","ServiceName": "ServiceA","SGNo": "001",
+        "NetworkName":             "Net001",
+        "KeyPairName":             "keypair_ap-northeast-1_01",
+        "EC2InstanceName":         "ec2-001",
+        "EC2InstanceAMI":          "/aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2",
+        "EC2InstanceInstanceType": "t2.micro",
+        "EC2InstanceVolumeType":   "gp2",
+        "EC2InstanceVolumeSize":   "8"
+    }
+]
+

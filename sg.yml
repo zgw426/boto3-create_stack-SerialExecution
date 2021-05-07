@@ -1,0 +1,39 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: Security Group
+
+Parameters:
+  PJPrefix:    { Type: String, Default: "172-020" }
+  ServiceName: { Type: String, Default: "EDI" }
+  SGNo:        { Type: String, Default: "001" }
+
+Resources:
+  SecurityGroupEC2:
+    Type: "AWS::EC2::SecurityGroup"
+    Properties:
+      GroupName: !Sub "${PJPrefix}-${SGNo}"
+      GroupDescription: !Sub "Project ${PJPrefix}"
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: '10.10.10.10/32'
+        - IpProtocol: tcp
+          FromPort: 0
+          ToPort: 65535
+          CidrIp: '172.20.0.0/24'
+        - IpProtocol: udp
+          FromPort: 0
+          ToPort: 65535
+          CidrIp: '172.20.0.0/24'
+      VpcId: { "Fn::ImportValue": !Sub "${PJPrefix}-vpc" }
+      Tags:
+        - Key: Name
+          Value: !Sub "sg-${PJPrefix}-${SGNo}"
+        - Key: ServiceName
+          Value: !Sub "${ServiceName}"
+
+Outputs:
+  SecurityGroupEC2:
+    Value: !Ref SecurityGroupEC2
+    Export:
+      Name: !Sub "sg-${PJPrefix}-${SGNo}"

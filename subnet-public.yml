@@ -1,0 +1,60 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description:  subnet public
+
+Parameters:
+  PJPrefix:         { Type: String, Default: "172-020" }
+  NetworkName:      { Type: String, Default: "NetworkName" }
+  PublicSubnetCIDR: { Type: String, Default: "172.20.0.0/27" }
+  AZName:           { Type: "AWS::EC2::AvailabilityZone::Name", Default: "ap-northeast-1a"}
+
+Resources: 
+  PublicSubnet01: 
+    Type: "AWS::EC2::Subnet"
+    Properties: 
+      AvailabilityZone: !Sub "${AZName}"
+      CidrBlock: !Ref PublicSubnetCIDR
+      VpcId: { "Fn::ImportValue": !Sub "${PJPrefix}-vpc" }
+      Tags: 
+        - Key: Name
+          Value: !Sub "${PJPrefix}-${NetworkName}"
+        - Key: PJPrefix
+          Value: !Sub "${PJPrefix}"
+
+  PublicRouteTable01: 
+    Type: "AWS::EC2::RouteTable"
+    Properties: 
+      VpcId: { "Fn::ImportValue": !Sub "${PJPrefix}-vpc" }
+      Tags: 
+        - Key: Name
+          Value: !Sub "${PJPrefix}-${NetworkName}-routetbl"
+        - Key: PJPrefix
+          Value: !Sub "${PJPrefix}"
+
+  PublicRoute01: 
+    Type: "AWS::EC2::Route"
+    Properties: 
+      RouteTableId: !Ref PublicRouteTable01
+      DestinationCidrBlock: "0.0.0.0/0"
+      GatewayId:  { "Fn::ImportValue": !Sub "${PJPrefix}-igw" }
+
+  PublicSubnet01RouteTable01ssociation: 
+    Type: "AWS::EC2::SubnetRouteTableAssociation"
+    Properties: 
+      SubnetId: !Ref PublicSubnet01 
+      RouteTableId: !Ref PublicRouteTable01
+
+Outputs:
+  PublicSubnet01:
+    Value: !Ref PublicSubnet01
+    Export:
+      Name: !Sub "${PJPrefix}-${NetworkName}"
+
+  PublicSubnetCIDR:
+    Value: !Ref PublicSubnetCIDR
+    Export:
+      Name: !Sub "${PJPrefix}-${NetworkName}-cidr"
+
+  PublicRouteTable01:
+    Value: !Ref PublicRouteTable01
+    Export:
+      Name: !Sub "${PJPrefix}-${NetworkName}-routetbl"
