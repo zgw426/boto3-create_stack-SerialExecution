@@ -152,7 +152,6 @@ b7a1f
         EC2InstanceVolumeSize = 8
         ServiceName = ServiceA
         EC2InstanceAMI = /aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2
-        InstanceProfile = tra-ec2-001-profile
         PJPrefix = Project1
         EC2InstanceInstanceType = t2.micro
         EC2InstanceVolumeType = gp2
