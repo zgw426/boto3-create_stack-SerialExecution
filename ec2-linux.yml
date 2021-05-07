@@ -11,7 +11,6 @@ Parameters:
   EC2InstanceInstanceType: { Type: String, Default: "t2.micro" }
   EC2InstanceVolumeType:   { Type: String, Default: "gp2" }
   EC2InstanceVolumeSize:   { Type: String, Default: "8" }
-  InstanceProfile:         { Type: String, Default: "tra-ec2-001-profile" }
   SGNo:                    { Type: String, Default: "001" }
 
 Resources:
